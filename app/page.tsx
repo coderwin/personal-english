@@ -13,9 +13,15 @@ export default function Home() {
           </h1>
           <p className="text-base leading-7 text-zinc-600 dark:text-zinc-400">
             MVP는 하루 1세션: passage 듣기/읽기 → 끊김 구간 → 단어·구조·소리
-            태그 → 요약. 진단 UX는 다음 이슈에서 구현합니다.
+            태그 → 요약.
           </p>
         </div>
+        <Link
+          href="/session?new=1&mode=listen"
+          className="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+        >
+          오늘 세션 시작 (듣기)
+        </Link>
         <ul className="flex flex-col gap-2 text-sm text-zinc-600 dark:text-zinc-400">
           <li>
             <Link
