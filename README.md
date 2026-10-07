@@ -35,7 +35,10 @@ pnpm dev
 pnpm lint          # ESLint
 pnpm format:check  # Prettier
 pnpm build         # 프로덕션 빌드
+pnpm test:e2e      # Playwright E2E (로컬: dev 서버 자동 기동)
 ```
+
+E2E smoke는 `e2e/session-smoke.spec.ts` — 홈 → 세션 → 끊김+태그 → 요약 (MVP S0~S6).
 
 ## 시드 passage (1~3)
 
