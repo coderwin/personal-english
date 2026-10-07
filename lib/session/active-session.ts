@@ -8,7 +8,7 @@ import {
   upsertPassage,
 } from "@/lib/db";
 
-const STORAGE_KEY = "pe:activeSessionId";
+import { ACTIVE_SESSION_STORAGE_KEY } from "./storage";
 
 export async function bootstrapSession(options: {
   forceNew?: boolean;
@@ -18,7 +18,7 @@ export async function bootstrapSession(options: {
   await upsertPassage(defaultPassage);
 
   if (!options.forceNew && typeof window !== "undefined") {
-    const storedId = sessionStorage.getItem(STORAGE_KEY);
+    const storedId = sessionStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
     if (storedId) {
       const existing = await getSession(storedId);
       if (existing && existing.completedAt === undefined) {
@@ -33,6 +33,6 @@ export async function bootstrapSession(options: {
     passageId: defaultPassage.id,
     mode: options.mode,
   });
-  sessionStorage.setItem(STORAGE_KEY, session.id);
+  sessionStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, session.id);
   return { passage: defaultPassage, session };
 }
