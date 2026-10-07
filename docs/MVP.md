@@ -86,10 +86,10 @@ type SessionMode = "listen" | "read";
 
 다음이 모두 만족하면 README 수준의 MVP “완료”:
 
-1. [ ] `pnpm dev`로 로컬 실행
-2. [ ] 시드 passage로 **S0~S6** 시나리오를 UI에서 재현
-3. [ ] 세션 종료 후 새로고침해도 **Breakpoint·태그**가 Dexie에 남음
-4. [ ] Playwright E2E 1개: “세션 시작 → 끊김 1회 + 태그 → 요약” smoke
+1. [x] `pnpm dev`로 로컬 실행
+2. [x] 시드 passage로 **S0~S6** 시나리오를 UI에서 재현
+3. [x] 세션 종료 후 새로고침해도 **Breakpoint·태그**가 Dexie에 남음
+4. [x] Playwright E2E 1개: “세션 시작 → 끊김 1회 + 태그 → 요약” smoke
 
 ## 7. 구현 이슈 분해 (권장 순서)
 
