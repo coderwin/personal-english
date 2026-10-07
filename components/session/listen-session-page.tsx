@@ -5,10 +5,21 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { splitTranscript } from "@/lib/content/split-transcript";
-import type { Passage, Session, SessionMode } from "@/lib/domain/types";
+import {
+  listBreakpointsForSession,
+  upsertBreakpointForSentence,
+} from "@/lib/db/operations";
+import type {
+  Breakpoint,
+  CauseTag,
+  Passage,
+  Session,
+  SessionMode,
+} from "@/lib/domain/types";
 import { bootstrapSession } from "@/lib/session/active-session";
 
 import { AudioPlayer } from "./audio-player";
+import { DiagnosticPanel } from "./diagnostic-panel";
 import { TranscriptView } from "./transcript-view";
 
 function sentenceIndexFromTime(
@@ -34,19 +45,35 @@ export function ListenSessionPage() {
   const [activeSentenceIndex, setActiveSentenceIndex] = useState<number | null>(
     null,
   );
+  const [breakpoints, setBreakpoints] = useState<Breakpoint[]>([]);
+  const [selectedSentenceIndex, setSelectedSentenceIndex] = useState<
+    number | null
+  >(null);
+  const [pendingTags, setPendingTags] = useState<CauseTag[]>([]);
+  const [savingBreakpoint, setSavingBreakpoint] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const sentenceCount = useMemo(
-    () => (passage ? splitTranscript(passage.transcript).length : 0),
+  const sentences = useMemo(
+    () => (passage ? splitTranscript(passage.transcript) : []),
     [passage],
+  );
+
+  const sentenceCount = sentences.length;
+
+  const breakpointSentenceIndices = useMemo(
+    () => new Set(breakpoints.map((bp) => bp.sentenceIndex)),
+    [breakpoints],
   );
 
   useEffect(() => {
     let cancelled = false;
     void bootstrapSession({ forceNew, mode })
-      .then((result) => {
+      .then(async (result) => {
         if (cancelled) return;
         setPassage(result.passage);
         setSession(result.session);
+        const saved = await listBreakpointsForSession(result.session.id);
+        if (!cancelled) setBreakpoints(saved);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -67,6 +94,66 @@ export function ListenSessionPage() {
     },
     [sentenceCount],
   );
+
+  const onSentenceSelect = useCallback(
+    (index: number) => {
+      setSelectedSentenceIndex(index);
+      setSaveError(null);
+      const existing = breakpoints.find((bp) => bp.sentenceIndex === index);
+      setPendingTags(existing ? [...existing.causeTags] : []);
+    },
+    [breakpoints],
+  );
+
+  const onToggleTag = useCallback((tag: CauseTag) => {
+    setPendingTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+    setSaveError(null);
+  }, []);
+
+  const onSaveBreakpoint = useCallback(() => {
+    if (
+      !session ||
+      selectedSentenceIndex === null ||
+      pendingTags.length === 0
+    ) {
+      return;
+    }
+    setSavingBreakpoint(true);
+    setSaveError(null);
+    void upsertBreakpointForSentence(
+      session.id,
+      selectedSentenceIndex,
+      pendingTags,
+    )
+      .then((saved) => {
+        setBreakpoints((prev) => {
+          const without = prev.filter(
+            (bp) => bp.sentenceIndex !== saved.sentenceIndex,
+          );
+          return [...without, saved].sort(
+            (a, b) => a.sentenceIndex - b.sentenceIndex,
+          );
+        });
+        setSelectedSentenceIndex(null);
+        setPendingTags([]);
+      })
+      .catch((err: unknown) => {
+        setSaveError(
+          err instanceof Error ? err.message : "끊김을 저장하지 못했습니다.",
+        );
+      })
+      .finally(() => {
+        setSavingBreakpoint(false);
+      });
+  }, [session, selectedSentenceIndex, pendingTags]);
+
+  const onClearSelection = useCallback(() => {
+    setSelectedSentenceIndex(null);
+    setPendingTags([]);
+    setSaveError(null);
+  }, []);
 
   if (error) {
     return (
@@ -142,17 +229,37 @@ export function ListenSessionPage() {
         </p>
       )}
 
+      <DiagnosticPanel
+        selectedSentenceIndex={selectedSentenceIndex}
+        selectedSentenceText={
+          selectedSentenceIndex !== null
+            ? (sentences[selectedSentenceIndex] ?? null)
+            : null
+        }
+        pendingTags={pendingTags}
+        onToggleTag={onToggleTag}
+        onSave={onSaveBreakpoint}
+        onClearSelection={onClearSelection}
+        saving={savingBreakpoint}
+        saveError={saveError}
+        breakpoints={breakpoints}
+        sentenceTexts={sentences}
+      />
+
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-medium text-zinc-500">전사 (transcript)</h2>
         <TranscriptView
           transcript={passage.transcript}
           activeSentenceIndex={mode === "listen" ? activeSentenceIndex : null}
+          selectedSentenceIndex={selectedSentenceIndex}
+          breakpointSentenceIndices={breakpointSentenceIndices}
+          onSentenceSelect={onSentenceSelect}
         />
       </section>
 
       <p className="text-xs text-zinc-500">
-        세션 ID: {session.id.slice(0, 8)}… · 모드: {mode} ({modeQuery}) ·
-        끊김/태그 UI는 다음 이슈
+        세션 ID: {session.id.slice(0, 8)}… · 모드: {mode} ({modeQuery}) · 저장된
+        끊김 {breakpoints.length}개
       </p>
     </div>
   );

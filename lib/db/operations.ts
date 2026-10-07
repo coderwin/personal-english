@@ -1,5 +1,6 @@
 import type {
   Breakpoint,
+  CauseTag,
   NewBreakpoint,
   NewSession,
   Passage,
@@ -66,6 +67,33 @@ export async function listBreakpointsForSession(
     .breakpoints.where("sessionId")
     .equals(sessionId)
     .sortBy("sentenceIndex");
+}
+
+export async function getBreakpointAtSentence(
+  sessionId: string,
+  sentenceIndex: number,
+): Promise<Breakpoint | undefined> {
+  const rows = await getDb()
+    .breakpoints.where("sessionId")
+    .equals(sessionId)
+    .toArray();
+  return rows.find((row) => row.sentenceIndex === sentenceIndex);
+}
+
+/** Create or replace tags for one sentence in a session. */
+export async function upsertBreakpointForSentence(
+  sessionId: string,
+  sentenceIndex: number,
+  causeTags: CauseTag[],
+): Promise<Breakpoint> {
+  const existing = await getBreakpointAtSentence(sessionId, sentenceIndex);
+  if (existing) {
+    await getDb().breakpoints.update(existing.id, {
+      causeTags: [...causeTags],
+    });
+    return { ...existing, causeTags: [...causeTags] };
+  }
+  return addBreakpoint({ sessionId, sentenceIndex, causeTags });
 }
 
 export async function addUnknownWord(
