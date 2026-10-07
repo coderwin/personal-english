@@ -37,6 +37,16 @@ pnpm format:check  # Prettier
 pnpm build         # 프로덕션 빌드
 ```
 
+## 시드 passage (1~3)
+
+전사·메타데이터는 [`content/seed-passages.json`](content/seed-passages.json)에 있고, 오디오는 `public/audio/`에 둔다. **UTC 날짜** 기준으로 passage가 하루에 하나씩 로테이션된다 (`lib/seed/daily-passage.ts`).
+
+낭독 mp3를 다시 만들 때 (Google TTS, `pip install gTTS`):
+
+```bash
+python3 scripts/generate-seed-audio.py
+```
+
 ## 개발 프로세스
 
 이슈 → 브랜치 → PR → (merge 시 이슈 close 및 브랜치 삭제). 자세한 절차는 [docs/WORKFLOW.md](docs/WORKFLOW.md)를 참고한다.
