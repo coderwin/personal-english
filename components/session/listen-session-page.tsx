@@ -188,9 +188,16 @@ export function ListenSessionPage() {
         <p className="text-sm font-medium uppercase tracking-wide text-zinc-500">
           오늘의 passage
         </p>
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          {passage.title}
-        </h1>
+        <div className="flex flex-wrap items-baseline gap-2">
+          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+            {passage.title}
+          </h1>
+          {passage.difficulty ? (
+            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+              {passage.difficulty}
+            </span>
+          ) : null}
+        </div>
         <div className="flex gap-2 text-sm">
           <Link
             href="/session?mode=listen"

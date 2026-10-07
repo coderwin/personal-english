@@ -1,0 +1,23 @@
+[
+  {
+    "id": "seed-01",
+    "title": "Morning routine",
+    "difficulty": "A2",
+    "audioFile": "seed-01.mp3",
+    "transcript": "I've been trying to figure out why some sentences feel easy when I read them, but fall apart when I hear them. This morning I listened to the same line three times. I knew every word on the page. Still, the middle clause vanished in the audio. That gap is what I want to record, not my quiz score."
+  },
+  {
+    "id": "seed-02",
+    "title": "Coffee shop order",
+    "difficulty": "A2",
+    "audioFile": "seed-02.mp3",
+    "transcript": "Yesterday I ordered coffee and the barista asked something I did not catch. She said it quickly, and the words blended together. When I read the menu aloud at home, the sentence made perfect sense. In the shop, I only heard the last word. I tagged it as sound, not vocabulary."
+  },
+  {
+    "id": "seed-03",
+    "title": "Meeting email",
+    "difficulty": "B1",
+    "audioFile": "seed-03.mp3",
+    "transcript": "My colleague sent a short email about moving the meeting. The first sentence was clear. Then there was a long phrase with two verbs and I lost the subject. Reading it slowly, I see who did what. Listening to the notification read aloud, the structure collapsed. That is the pattern I need to notice."
+  }
+]
