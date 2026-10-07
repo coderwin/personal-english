@@ -20,6 +20,23 @@ Duolingo는 매일 문제를 푸는 습관은 만들어 줬지만, 문장이 이
 - [기술·설계 결정 (언어/프레임워크)](docs/TECH_DECISIONS.md)
 - [작업 프로세스 (이슈 → PR)](docs/WORKFLOW.md)
 
+## 로컬 실행
+
+[pnpm](https://pnpm.io/)이 필요합니다.
+
+```bash
+pnpm install
+pnpm dev
+```
+
+브라우저에서 [http://localhost:3000](http://localhost:3000) 을 연다.
+
+```bash
+pnpm lint          # ESLint
+pnpm format:check  # Prettier
+pnpm build         # 프로덕션 빌드
+```
+
 ## 개발 프로세스
 
 이슈 → 브랜치 → PR → (merge 시 이슈 close 및 브랜치 삭제). 자세한 절차는 [docs/WORKFLOW.md](docs/WORKFLOW.md)를 참고한다.
