@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:pages": "GITHUB_PAGES=true NEXT_PUBLIC_BASE_PATH=/personal-english next build",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",

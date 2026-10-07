@@ -16,7 +16,15 @@ Duolingo는 매일 문제를 푸는 습관은 만들어 줬지만, 문장이 이
 
 ## MVP v0 상태
 
-**MVP v0 완료** (`main`, [docs/MVP.md §6](docs/MVP.md#6-완료-기준-프로젝트-mvp)): 로컬 실행, S0~S6 UI, Dexie에 끊김·태그 유지, Playwright smoke E2E. 배포·홈 7일 통계·미니 연습(S5) 등은 이후 이슈.
+**MVP v0 완료** (`main`, [docs/MVP.md §6](docs/MVP.md#6-완료-기준-프로젝트-mvp)): 로컬 실행, S0~S6 UI, Dexie에 끊김·태그 유지, Playwright smoke E2E. 홈 7일 통계·미니 연습(S5) 등은 이후 이슈.
+
+### GitHub Pages (테스트 배포)
+
+`main` merge 시 [Deploy GitHub Pages](.github/workflows/deploy-pages.yml) workflow가 static export(`pnpm build:pages`) 후 배포한다.
+
+- **URL (repo Settings → Pages → GitHub Actions 활성화 후):** `https://coderwin.github.io/personal-english/`
+- 저장소 **Settings → Pages → Build and deployment → Source: GitHub Actions** 로 한 번 설정해야 한다.
+- 로컬 미리보기: `pnpm build:pages` 후 `npx serve out` (경로는 `/personal-english/`).
 
 ## 문서
 
