@@ -1,4 +1,5 @@
 import seedDefinitions from "@/content/seed-passages.json";
+import { withBasePath } from "@/lib/base-path";
 import type { Passage } from "@/lib/domain/types";
 
 export interface SeedPassageDefinition {
@@ -16,7 +17,7 @@ export function definitionToPassage(def: SeedPassageDefinition): Passage {
     id: def.id,
     title: def.title,
     transcript: def.transcript,
-    audioUrl: `/audio/${def.audioFile}`,
+    audioUrl: withBasePath(`/audio/${def.audioFile}`),
     difficulty: def.difficulty,
   };
 }
