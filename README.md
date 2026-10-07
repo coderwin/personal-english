@@ -22,9 +22,10 @@ Duolingo는 매일 문제를 푸는 습관은 만들어 줬지만, 문장이 이
 
 `main` merge 시 [Deploy GitHub Pages](.github/workflows/deploy-pages.yml) workflow가 static export(`pnpm build:pages`) 후 배포한다.
 
-- **URL (repo Settings → Pages → GitHub Actions 활성화 후):** `https://coderwin.github.io/personal-english/`
-- 저장소 **Settings → Pages → Build and deployment → Source: GitHub Actions** 로 한 번 설정해야 한다.
-- 로컬 미리보기: `pnpm build:pages` 후 `npx serve out` (경로는 `/personal-english/`).
+- **URL:** `https://coderwin.github.io/personal-english/` (배포 성공 후)
+- **최초 1회 (repo owner):** [Settings → Pages](https://github.com/coderwin/personal-english/settings/pages) → **Build and deployment → Source: GitHub Actions**
+- **404가 나올 때:** Pages를 켜기 *전에* merge되면 [Deploy GitHub Pages](.github/workflows/deploy-pages.yml)의 **deploy** 단계가 실패하고 사이트 파일이 올라가지 않는다. Settings에서 Source를 GitHub Actions로 바꾼 뒤, Actions 탭에서 **Deploy GitHub Pages** workflow를 **Re-run all jobs** 하거나 `main`에 다시 push한다.
+- 로컬 미리보기: `pnpm build:pages` 후 `npx serve out` → `http://localhost:3000/personal-english/`
 
 ## 문서
 
