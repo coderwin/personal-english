@@ -257,10 +257,18 @@ export function ListenSessionPage() {
         />
       </section>
 
-      <p className="text-xs text-zinc-500">
-        세션 ID: {session.id.slice(0, 8)}… · 모드: {mode} ({modeQuery}) · 저장된
-        끊김 {breakpoints.length}개
-      </p>
+      <footer className="flex flex-col gap-3 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+        <Link
+          href={`/session/summary?sessionId=${session.id}`}
+          className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+        >
+          세션 마무리 — 요약 보기
+        </Link>
+        <p className="text-xs text-zinc-500">
+          세션 ID: {session.id.slice(0, 8)}… · 모드: {mode} ({modeQuery}) ·
+          저장된 끊김 {breakpoints.length}개
+        </p>
+      </footer>
     </div>
   );
 }
